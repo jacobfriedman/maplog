@@ -27,25 +27,17 @@ parse_tiingo_ticker_rows([]) :- true.
 parse_tiingo_ticker_rows([Row | Rows]) :- 
 
 		% Data Coming from Tiingo looks like: `ZNCM,PINK,Stock,USD,1995-02-01,2021-06-28`
-		Row = row(Ticker, Market, Asset_Type, Denomination, Start_Date, End_Date),
+		Row = row(Ticker_Symbol, Market, Asset_Type, Denomination, Start_Date, End_Date),
 
 		% Build the Sub-Directory
+		atomic_list_concat(['exchanges','/',Market,'/',Ticker_Symbol], Ticker_Symbol_Directory),
+	    os::ensure_directory(Ticker_Symbol_Directory),
 
-		% atomic_list_concat(['raw','/',Market,'/',Ticker], Processed_Ticker_Directory),
-
-		atomic_list_concat(['exchanges','/',Market,'/',Ticker], Processed_Ticker_Directory),
-	    os::ensure_directory(Processed_Ticker_Directory),
-
-		% Do Work...
-		asserta(ticker_symbol(Ticker)),
-		asserta(market(Market)),
-		asserta(market(Market)),
-		asserta(denomination(Ticker, Denomination)),
-	    asserta(asset_type(Ticker, Asset_Type)),
-
-		% Load the Ticker into
-		atomic_list_concat([Market, '_', Ticker], Ticker_Symbol_Identifier), 
-
+		% Build the Logtalk Objects
+		% ID is <Market + '_' + Ticker_Symbol>
+		% 
+		% 
+		atomic_list_concat([Market, '_', Ticker_Symbol], Ticker_Symbol_Identifier), 
 		(	current_object(Ticker_Symbol_Identifier) 
 		->	!
 		;	create_object(
@@ -53,7 +45,11 @@ parse_tiingo_ticker_rows([Row | Rows]) :-
 				[implements(ticker_symbol)],
 				[],
 				[
-						data_locations(Processed_Ticker_Directory)
+						ticker_symbol(Ticker_Symbol),
+						data_location(Ticker_Symbol_Directory),
+						exchange(Market),
+						denomination(Denomination),
+						asset_type(Asset_Type)
 				]
 			)
 		),
