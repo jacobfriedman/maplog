@@ -1,6 +1,6 @@
 keys
 node_modules
-data/processed/**
+data/exchanges/**
 data/raw/tiingo/**
 srv/www/nodejs/node_modules
 **/lgt_timp

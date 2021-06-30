@@ -44,6 +44,8 @@ const options = {
     'content-type':'application/csv'
   }
 
+  
+
 //https://api.tiingo.com/iex/
 //function tiingo(tickers, format, method)
  /*fs.writeFile('./data/raw/', function (err) {
