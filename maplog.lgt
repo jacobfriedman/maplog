@@ -45,11 +45,12 @@ parse_tiingo_ticker_rows([Row | Rows]) :-
 				[implements(ticker_symbol)],
 				[],
 				[
-						ticker_symbol(Ticker_Symbol),
-						data_location(Ticker_Symbol_Directory),
+						directory_location(Ticker_Symbol_Directory),
 						exchange(Market),
 						denomination(Denomination),
 						asset_type(Asset_Type)
+						ticker_symbol(Ticker_Symbol),
+
 				]
 			)
 		),

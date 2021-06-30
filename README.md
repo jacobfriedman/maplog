@@ -6,6 +6,7 @@ Requests & Inputs Facts to a [Pengine](https://www.swi-prolog.org/pldoc/doc_for?
 
 ### TODO
 
+- [x] ticker_symbol Protocol:   directory_location/1, exchange/1, denomination/1, asset_type/1, name/1
 - [ ] [Save Object Facts as Data Protocols to Folder](https://github.com/LogtalkDotOrg/logtalk3/tree/ca394b5da94462c882007261115fd365a5d873c9/examples/serialization)
 - [ ] Implement Pengines: [Logtalk Style](https://github.com/LogtalkDotOrg/logtalk3/tree/master/examples/pengines)
 

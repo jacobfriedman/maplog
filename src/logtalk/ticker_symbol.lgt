@@ -2,7 +2,7 @@
 
 :- dynamic.
 :- public([
-    data_location/1,
+    directory_location/1,
     exchange/1,
     denomination/1,
     asset_type/1,
