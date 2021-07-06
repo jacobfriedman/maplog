@@ -1,4 +1,6 @@
 :- use_module(library(csv)).
+:- use_module(library(http/http_client)).
+:- use_module(library(strings)).
 
 :- object(maplog).
 
@@ -6,23 +8,33 @@
 	:- use_module(library(csv), [csv_read_file/2]).
 	:- meta_predicate(csv:csv_read_file(*)).
 
-	:- public( [build_directory_structure/1] ).   
+	:- public( [build_directory_structure/1, ticker_symbol/2] ).   
 
-	:- uses(user, [ticker_symbol/1, market/1, denomination/2, asset_type/2]).   
+	:- dynamic(ticker_symbol/2).
 
 	:- initialization(run).
-	:- dynamic(user::ticker_symbol/1).
-	:- dynamic(user::market/1).
-	:- dynamic(user::denomination/2).
-	:- dynamic(user::asset_type/2).
+
+
+ticker_symbol_cik_assertion([]) :- true.
+ticker_symbol_cik_assertion([row(Ticker_Symbol, Central_Index_Key) | Rest]) :-
+	% ::assertz(central_index_key(Ticker_Symbol, Central_Index_Key)),
+	::assertz(ticker_symbol(Central_Index_Key, Ticker_Symbol)),
+	ticker_symbol_cik_assertion(Rest).
+
+get_sec_ticker_symbols_and_central_index_keys(Ticker_Symbols_And_Central_Index_Keys) :- 
+	http:http_get('https://www.sec.gov/include/ticker.txt',Data, []),
+	open_string(Data,Stream),
+	csv:csv_read_stream(Stream, Rows, [separator(9)]),
+	ticker_symbol_cik_assertion(Rows).
 
 % The Initial Maplog Boot.
 run :-
 
 	os::make_directory('data'),
+	get_sec_ticker_symbols_and_central_index_keys(Central_Index_Keys),
 	writeln('Procuring ticker symbol directories ... '),
-	os::ensure_directory('data/exchanges'),
-	build_directory_structure(ticker_symbols).
+	os::ensure_directory('data/exchanges').
+	% build_directory_structure(ticker_symbols).
 
 parse_tiingo_ticker_rows([]) :- true.
 parse_tiingo_ticker_rows([Row | Rows]) :- 
@@ -43,7 +55,7 @@ parse_tiingo_ticker_rows([Row | Rows]) :-
 		% Create an Atomic Object from String
 		atom_string(Ticker_Symbol_Object, Ticker_Symbol_Identifier_Lowercase),
 
-		(	current_object(Ticker_Symbol_Object) 
+		/*(	current_object(Ticker_Symbol_Object) 
 		->	!
 
 		% 	There should be some way of quickly defining this data-structure quickly.
@@ -68,6 +80,7 @@ parse_tiingo_ticker_rows([Row | Rows]) :-
 				]
 			)
 		),
+		*/
 
 		% 	Does the object declare certain facts? 
 		% 	Should it be transformed/resampled in any way?
@@ -106,9 +119,9 @@ parse_tiingo_ticker_rows([Row | Rows]) :-
 		write_canonical(Stream, object(Ticker_Symbol_Identifier_Lowercase)), write(Stream, '.\n'),
 		close(Stream),
 		% serializer::save(Ticker_Symbol_Identifier, Ticker_Symbol),
-		os::change_directory(Current_Working_Directory).
+		os::change_directory(Current_Working_Directory),
 	
-		% parse_tiingo_ticker_rows(Rows)
+	 parse_tiingo_ticker_rows(Rows).
 		
 
 
