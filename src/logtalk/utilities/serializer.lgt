@@ -34,7 +34,7 @@
 		argnames is ['Protocol', 'File']
 	]).
 
-	:- public(restore/1).
+	:- public([restore/1, object_data/4, save_object/3]).
 	:- mode(restore(+atom), one).
 	:- info(restore/1, [
 		comment is 'Restores from a file all serialized dynamic objects.',

@@ -13,6 +13,13 @@ Requests & Inputs Facts to a [Pengine](https://www.swi-prolog.org/pldoc/doc_for?
 
 ## Data Sources
 
+### Ontologies
+
+- [FIBO Financial Ontology](https://github.com/edmcouncil/fibo)
+        - This is a GIT Submodule; you'll have to initialize it.
+
+### Financial Data
+
 - [x] Tiingo
 - -[ ] Edgar
         
@@ -37,12 +44,11 @@ Max Requests Per Day  150,000
 
 Files are stored in:
 
- `/data/raw/<ticker>/<klines, trades, orders, or books>`
+ `/data/<exchange>/<ticker_symbol>/<klines, trades, orders, filings>`
 
 ## Representation
 
 Time is always represented in ISO-8601 format ...
-
 > 19790201T220000PT1MZ --> Time period of February 1st, 1979 at 10:00 — until 1 minutes' time later, UTC
 
 ## File API

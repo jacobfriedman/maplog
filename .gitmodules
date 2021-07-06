@@ -1,0 +1,3 @@
+[submodule "lib/rdf/fibo"]
+	path = lib/rdf/fibo
+	url = https://github.com/edmcouncil/fibo
